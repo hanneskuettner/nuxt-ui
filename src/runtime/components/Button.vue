@@ -42,9 +42,9 @@ export interface ButtonSlots {
 </script>
 
 <script setup lang="ts">
-import { type Ref, computed, ref, inject } from 'vue'
+import { type Ref, computed, ref, inject, watch } from 'vue'
 import { defu } from 'defu'
-import { useForwardProps } from 'reka-ui'
+import { useForwardProps, useForwardExpose } from 'reka-ui'
 import { useAppConfig } from '#imports'
 import { useComponentIcons } from '../composables/useComponentIcons'
 import { useButtonGroup } from '../composables/useButtonGroup'
@@ -68,6 +68,7 @@ const appConfig = useAppConfig() as Button['AppConfig']
 const { orientation, size: buttonSize } = useButtonGroup<ButtonProps>(props)
 
 const linkProps = useForwardProps(pickLinkProps(props))
+const { forwardRef } = useForwardExpose()
 
 const loadingAutoState = ref(false)
 const formLoading = inject<Ref<boolean> | undefined>(formLoadingInjectionKey, undefined)
@@ -127,6 +128,7 @@ const ui = computed(() => tv({
   >
     <ULinkBase
       v-bind="slotProps"
+      :ref="forwardRef"
       :class="ui.base({
         class: [props.ui?.base, props.class],
         active,
